@@ -1,0 +1,17 @@
+groups:
+ - name: system_alerts
+   rules:
+    - alert: InstanceDown
+      expr: up == 0
+      for: 2m
+      labels:
+       severity: critical
+      annotations:
+       summary: "Server {{ $labels.instance }} unnacessible"
+    - alert: HighCPU
+      expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+      for: 5m
+      labels:
+       severity: warning
+      annotations:
+       summary: "High CPU Usage"
