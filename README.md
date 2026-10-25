@@ -57,3 +57,34 @@ docker compose up -d
 ```sh
 docker compose ps
 ```
+
+## 🖥️ Доступ к интерфейсам (SSH-туннели)
+
+Поскольку панели управления скрыты от внешней сети для безопасности, для доступа к ним используется SSH-проброс портов.
+
+**На хосте:**
+
+```sh
+ssh -L 3000:localhost:3000 -L 9090:localhost:9090 <user_name>@<IP_СЕРВЕРА>
+```
+
+Grafana: `http://localhost:3000` (Логин: admin, пароль из `.env`)
+
+Prometheus: `http://localhost:9090`
+
+## 📂 Структура проекта
+```text
+.
+├── .env.example               # Шаблон переменных окружения
+├── .gitignore                 # Исключения для Git
+├── docker-compose.yml         # Главный файл конфигурации Docker
+├── grafana/
+│   └── provisioning/          # Автоматическое подключение источников данных
+├── loki/
+│   └── loki-config.yaml       # Конфигурация хранения логов
+├── prometheus/
+│   ├── prometheus.yml         # Конфигурация сбора метрик
+│   └── alert_rules.yml        # Правила алертов (CPU, RAM, Disk, Down)
+└── promtail/
+    └── promtail-config.yaml   # Конфигурация сбора логов с хоста
+```
