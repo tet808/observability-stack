@@ -11,6 +11,8 @@ services:
      - '--config.file=/etc/prometheus/prometheus.yml'
      - '--storage.tsdb.retention.time=30d'
      - '--web.enable-lifecycle'
+    ports:
+     - "127.0.0.1:9090:9090"
     networks:
      - observability
 
@@ -40,13 +42,14 @@ services:
     container_name: node-exporter
     restart: unless-stopped
     volumes:
-     - ./proc:/host/proc:ro
-     - ./sys:/host/sys:ro
-     - ./:/rootfs:ro
+     - /proc:/host/proc:ro
+     - /sys:/host/sys:ro
+     - /:/rootfs:ro
     command:
      - '--path.procfs=/host/proc'
      - '--path.sysfs=/host/sys'
      - '--path.rootfs=/rootfs'
+     - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     networks:
      - observability
   grafana:
