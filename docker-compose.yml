@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     volumes:
      - ./promtail/promtail-config.yaml:/etc/promtail/config.yml:ro
-     - ./var/log:/var/log:ro
+     - /var/log:/var/log:ro
      - ./var/lib/docker/containers:/var/lib/docker/containers:ro
     networks:
      - observability
