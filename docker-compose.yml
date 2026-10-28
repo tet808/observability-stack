@@ -29,6 +29,7 @@ services:
   promtail:
     image: grafana/promtail:latest
     container_name: promtail
+    user: root
     restart: unless-stopped
     volumes:
      - ./promtail/promtail-config.yaml:/etc/promtail/config.yml:ro

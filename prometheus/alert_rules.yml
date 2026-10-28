@@ -5,13 +5,23 @@ groups:
       expr: up == 0
       for: 2m
       labels:
-       severity: critical
+        severity: critical
       annotations:
-       summary: "Server {{ $labels.instance }} unnacessible"
+        summary: "Server {{ $labels.instance }} unnacessible"
+        description: "Server not responfing for 2 min. Chech container status `docker compose ps`. Up server `docker compose up -d <name>`"
     - alert: HighCPU
       expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
       for: 5m
       labels:
-       severity: warning
+        severity: warning
       annotations:
-       summary: "High CPU Usage"
+        summary: "High CPU Usage"
+        description: "CPU usage exceeds 85% for 5 min. Do `docker stats` or `top`. Restart container `docker compose restart <name>` "
+    - alert: DiskSpaceLow
+      expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 15
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Low disk space {{ $labels.instance }}"
+        descirption: "{{ $labels.mountpoint }} have 15% free space. Check space `df -h`"
